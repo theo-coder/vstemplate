@@ -13,7 +13,7 @@
     "scaffold"
   ],
   "icon": "images/icon.png",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "theo-coder",
   "engines": {
     "vscode": "^1.73.0"
