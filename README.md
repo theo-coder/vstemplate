@@ -1,71 +1,67 @@
-# vstemplate README
+# VSTemplate
 
-This is the README for your extension "vstemplate". After writing up a brief description, we recommend including the following sections.
+VSTemplate let you create files and automatically fill them with some custom templates.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Fill files with default boilerplate
+- Create custom files according to the template
 
-For example if there is an image subfolder under your extension project workspace:
+![demo](images/demo.gif)
 
-\!\[feature X\]\(images/feature-x.png\)
+## Variables
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Here are some variables to use in configuration
 
-## Requirements
+| VARIABLE | Description                                                             |
+| -------- | ----------------------------------------------------------------------- |
+| FILENAME | The name of the initial file created (detected by the pattern wildcard) |
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Configuration
 
-## Extension Settings
+To configure your templates and file you have to edit the vscode configuration file
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### vstemplate.templates
 
-For example:
+Example Structure
 
-This extension contributes the following settings:
+```json
+{
+    "React TS Component": [
+        "import React from 'react';",
+        "",
+        "interface ${FILENAME}Props {",
+        "};",
+        "",
+        "const ${FILENAME} = ({}: ${FILENAME}Props) => {",
+        "    return <div>",
+        "    </div>;",
+        "};",
+        "",
+        "export default ${FILENAME};"
+    ]
+}
+```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### vstemplate.snippets
 
-## Known Issues
+Example Structure
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+```json
+[
+    {
+        "pattern": "**/Components/*.tsx",
+        "template": "React TS Component",
+        "childs": [
+            {
+                "name": "${FILENAME}.stories.tsx",
+                "template": "Some template..."
+            }
+        ]
+    }
+]
+```
 
-## Release Notes
+### Credits
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+The idea came after seeing a PHPStorm feature...

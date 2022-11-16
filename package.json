@@ -1,35 +1,174 @@
 {
   "name": "vstemplate",
-  "displayName": "vstemplate",
-  "description": "",
-  "version": "0.0.1",
+  "displayName": "VSTemplate",
+  "description": "Create Templates for file",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theo-coder/vstemplate"
+  },
+  "keywords": [
+    "File templates",
+    "template",
+    "Productivity",
+    "scaffold"
+  ],
+  "icon": "images/icon.png",
+  "version": "1.0.0",
+  "publisher": "Théo Posty",
   "engines": {
     "vscode": "^1.73.0"
   },
+  "license": "MIT",
   "categories": [
     "Other"
   ],
   "activationEvents": [
     "*"
   ],
+  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "title": "VSTemplate",
       "properties": {
+        "vstemplate.templates": {
+          "type": "object",
+          "scope": "window",
+          "default": {
+            "tsx": [
+              "import Styles from './${FILENAME}.module.scss';",
+              "import clsx from 'clsx';",
+              "",
+              "type ${FILENAME}Props = {",
+              "};",
+              "",
+              "export function ${FILENAME}({}: ${FILENAME}Props) {",
+              "    return <div className={clsx(Styles.${FILENAME})}>",
+              "    </div>",
+              "};"
+            ],
+            "stories": [
+              "import { ${FILENAME} } from './${FILENAME}';",
+              "import { ComponentMeta, ComponentStory } from '@storybook/react';",
+              "",
+              "export default {",
+              "    title: '${FILENAME}',",
+              "    component: '${FILENAME}',",
+              "    argTypes: {}",
+              "} as ComponentMeta<typeof ${FILENAME}>;",
+              "",
+              "const Template: ComponentStory<typeof ${FILENAME}> = (args) => <${FILENAME} {...args} />;",
+              "",
+              "export const Default = Template.bind({});",
+              "",
+              "Default.args = {",
+              "};"
+            ],
+            "scss": [
+              ".${FILENAME} {",
+              "}"
+            ],
+            "scsstypes": [
+              "export const ${FILENAME}: string;"
+            ]
+          },
+          "description": "The templates, formatted like vscode Snippets",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^.+$": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "default": "",
+                  "minLength": 1
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "default": ""
+                  }
+                }
+              ]
+            }
+          }
+        },
         "vstemplate.snippets": {
           "type": "array",
-          "markdownDescription": "Mapping from file extensions to required snippets",
+          "scope": "window",
           "default": [
             {
-              "pattern": "**/*.tsx",
-              "snippet": "tsxtemplate"
+              "pattern": "**/Atoms/*.tsx",
+              "template": "tsx",
+              "childs": [
+                {
+                  "name": "${FILENAME}.stories.tsx",
+                  "template": "stories"
+                },
+                {
+                  "name": "${FILENAME}.module.scss",
+                  "template": "scss"
+                },
+                {
+                  "name": "${FILENAME}.module.scss.d.ts",
+                  "template": "scsstypes"
+                }
+              ]
             }
-          ]
+          ],
+          "description": "Mapping from file extensions to required snippets",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "default": "",
+                "minLength": 1,
+                "description": "The pattern that detect file creation"
+              },
+              "template": {
+                "type": "string",
+                "default": "",
+                "minLength": 1,
+                "description": "The template to create the file with"
+              },
+              "childs": {
+                "type": "array",
+                "default": [],
+                "description": "When the file is created, creates some more new files",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "default": "",
+                      "minLength": 1,
+                      "description": "The name of the file created"
+                    },
+                    "template": {
+                      "type": "string",
+                      "default": "",
+                      "minLength": 1,
+                      "description": "The template to create the file with"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "template"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "pattern",
+              "template"
+            ]
+          }
         }
       }
     }
   },
-  "main": "./out/extension.js",
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
@@ -39,16 +178,20 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.73.0",
     "@types/glob": "^8.0.0",
+    "@types/micromatch": "^4.0.2",
     "@types/mocha": "^10.0.0",
     "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
+    "@vscode/test-electron": "^2.2.0",
     "eslint": "^8.26.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
-    "typescript": "^4.8.4",
-    "@vscode/test-electron": "^2.2.0"
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "micromatch": "^4.0.5"
   }
 }
